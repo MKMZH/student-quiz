@@ -7,49 +7,56 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- أيقونة الإدارة المنبثقة -->
+  <!-- شريط المدرسة -->
+  <header class="school-header">
+    <img id="schoolLogo" src="https://cdn-icons-png.flaticon.com/512/2995/2995531.png" alt="شعار المدرسة">
+    <h2 id="schoolName">مدرسة الريادة النموذجية</h2>
+  </header>
+
+  <!-- أيقونة الإدارة -->
   <div id="adminIcon" class="admin-icon" onclick="toggleAdminPanel()">⚙️</div>
 
-  <!-- لوحة التحكم المنبثقة -->
+  <!-- لوحة الإدارة -->
   <div id="adminPanel" class="admin-panel hidden">
     <div class="admin-header">
-      <h3>لوحة التحكم الإدارية</h3>
-      <button onclick="toggleAdminPanel()">❌</button>
+      <h3>لوحة التحكم</h3>
+      <button class="close-btn" onclick="toggleAdminPanel()">✖</button>
     </div>
     <div class="admin-tabs">
-      <button class="tab-btn active" onclick="showTab('questions')">📝 الأسئلة</button>
-      <button class="tab-btn" onclick="showTab('settings')">⚙️ الإعدادات</button>
-      <button class="tab-btn" onclick="showTab('prizes')">🎁 الجوائز</button>
-      <button class="tab-btn" onclick="showTab('results')">📊 النتائج</button>
+      <button class="tab-btn active" onclick="showTab('questions', event)">📝 الأسئلة</button>
+      <button class="tab-btn" onclick="showTab('settings', event)">⚙️ الإعدادات</button>
+      <button class="tab-btn" onclick="showTab('prizes', event)">🎁 الجوائز</button>
+      <button class="tab-btn" onclick="showTab('info', event)">🏫 بيانات المدرسة</button>
     </div>
     <div id="tabContent" class="tab-content"></div>
   </div>
 
   <!-- واجهة الطلاب -->
-  <div class="container">
-    <h1>نظام المسابقات التعليمية</h1>
-    <div id="studentForm" class="student-form">
+  <main class="quiz-card">
+    <h1>🏆 نظام المسابقات التعليمية</h1>
+
+    <section id="studentForm" class="student-section">
       <label>اسم الطالب</label>
-      <input type="text" id="studentName" required>
+      <input type="text" id="studentName" placeholder="اكتب اسمك الكامل">
       <label>الفصل</label>
-      <input type="text" id="studentClass" required>
-      <button onclick="startQuiz()">ابدأ المسابقة 🎯</button>
-    </div>
-    <div id="quizArea" class="hidden">
+      <input type="text" id="studentClass" placeholder="مثال: 3 / أ">
+      <button onclick="startQuiz()">🚀 ابدأ المسابقة</button>
+    </section>
+
+    <section id="quizArea" class="hidden">
       <h2>الأسئلة</h2>
       <div id="questionsContainer"></div>
-      <button onclick="submitAnswers()">إرسال الإجابات ✅</button>
-    </div>
-    <div id="resultArea" class="hidden">
+      <button onclick="submitAnswers()">📩 إرسال الإجابات</button>
+    </section>
+
+    <section id="resultArea" class="hidden">
       <h2>النتيجة</h2>
-      <div id="scoreDisplay"></div>
-      <button onclick="resetQuiz()">مشاركة جديدة 🔄</button>
-    </div>
-  </div>
+      <div id="scoreDisplay" class="score-display"></div>
+      <button onclick="resetQuiz()">🔄 مشاركة جديدة</button>
+    </section>
+  </main>
 
-  <!-- Toast Notifications -->
   <div id="toast" class="toast"></div>
-
   <script src="script.js"></script>
 </body>
 </html>
