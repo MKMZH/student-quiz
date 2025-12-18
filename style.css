@@ -1,0 +1,122 @@
+body {
+  font-family: "Tajawal", Arial, sans-serif;
+  background: #f5f6fa;
+  margin: 0;
+  padding: 0;
+  direction: rtl;
+}
+
+/* واجهة الطلاب */
+.container {
+  max-width: 700px;
+  background: white;
+  margin: 50px auto;
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+h1 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+input {
+  width: 90%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+button {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+button:hover {
+  background: #43A047;
+}
+
+/* لوحة الإدارة */
+.admin-icon {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: #2196F3;
+  color: white;
+  font-size: 1.5rem;
+  padding: 15px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  z-index: 1000;
+}
+
+.admin-panel {
+  position: fixed;
+  bottom: 80px;
+  left: 20px;
+  width: 350px;
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  padding: 15px;
+  z-index: 999;
+}
+
+.admin-panel.hidden {
+  display: none;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 5px;
+}
+
+.admin-tabs {
+  margin-top: 10px;
+}
+
+.tab-btn {
+  background: #eee;
+  border: none;
+  padding: 8px 15px;
+  margin: 3px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.tab-btn.active {
+  background: #4CAF50;
+  color: white;
+}
+
+.toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #323232;
+  color: #fff;
+  padding: 15px 20px;
+  border-radius: 8px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.toast.show {
+  opacity: 1;
+  visibility: visible;
+}
