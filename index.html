@@ -6,63 +6,77 @@
   <title>🏆 نظام المسابقات التعليمية</title>
   <style>
     body {
-      font-family: "Cairo", sans-serif;
-      background: #f4f6f5;
-      direction: rtl;
-      text-align: center;
-      margin: 0;
-      padding: 0;
+      font-family:"Cairo",sans-serif;
+      background:#f5f6f8;
+      margin:0;direction:rtl;text-align:center;
     }
-    .container {
-      max-width: 700px;
-      margin: 60px auto;
-      background: #fff;
-      padding: 40px;
-      border-radius: 15px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    .container{
+      background:#fff;
+      max-width:750px;
+      margin:40px auto;
+      padding:25px 20px;
+      border-radius:15px;
+      box-shadow:0 6px 20px rgba(0,0,0,0.1);
     }
-    h1 {
-      color: #0da175;
+    h1{color:#0da175;margin-bottom:20px;}
+    section{margin:25px 0;padding:15px;border:1px solid #eee;border-radius:10px;}
+    input,button,textarea{
+      margin:7px 0;padding:10px;width:90%;font-size:1rem;
+      border-radius:8px;border:1px solid #ccc;
     }
-    input, button {
-      margin: 10px 0;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      width: 85%;
-      font-size: 1rem;
+    button{
+      background:#0da175;color:#fff;border:none;
+      font-weight:bold;cursor:pointer;transition:0.3s;
     }
-    button {
-      background: #0da175;
-      color: #fff;
-      border: none;
-      transition: 0.3s;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #097e5b;
-    }
+    button:hover{background:#087f59;}
+    .status{font-weight:bold;color:#444;margin-top:10px;}
   </style>
 </head>
 
 <body>
   <div class="container">
-    <h1>نظام المسابقات التعليمية</h1>
-    <p>هذا اختبار للاتصال بفايربيز (Firebase)</p>
-    <button onclick="addTestData()">إضافة سؤال أونلاين</button>
-    <button onclick="getAllQuestions()">عرض الأسئلة من السحابة</button>
-    <pre id="output"></pre>
+    <h1>🏆 نظام المسابقات التعليمية</h1>
+
+    <!-- قسم الإعدادات -->
+    <section id="settings">
+      <h3>⚙️ إعداد المسابقة</h3>
+      <label>تاريخ ووقت بداية المسابقة:</label><br>
+      <input type="datetime-local" id="startTime"><br>
+
+      <label>مدة المسابقة (بالدقائق):</label><br>
+      <input type="number" id="duration" value="10"><br>
+
+      <button onclick="saveSettings()">💾 حفظ الإعدادات</button>
+      <div class="status" id="settingsStatus"></div>
+    </section>
+
+    <!-- قسم إضافة الأسئلة -->
+    <section id="questions">
+      <h3>📝 إضافة سؤال</h3>
+      <textarea id="questionText" placeholder="اكتب نص السؤال هنا..." rows="3"></textarea><br>
+      <input id="correctAnswer" placeholder="الإجابة الصحيحة"><br>
+      <button onclick="addQuestion()">➕ إضافة السؤال</button>
+      <div id="questionsList" class="status"></div>
+    </section>
+
+    <!-- قسم النتائج -->
+    <section id="results">
+      <h3>📊 النتائج</h3>
+      <button onclick="loadQuestions()">🔄 تحميل الأسئلة من السحابة</button>
+      <pre id="output"></pre>
+    </section>
   </div>
 
-  <!-- 🟢 كود Firebase -->
+  <!-- 🔗 كود Firebase -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-analytics.js";
     import {
       getFirestore,
       collection,
       addDoc,
-      getDocs
+      getDocs,
+      setDoc,
+      doc
     } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -76,29 +90,43 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-    const db = getFirestore(app);
+    const db  = getFirestore(app);
+    console.log("✅ متصل بـ Firebase");
 
-    console.log("✅ تم الاتصال بـFirebase بنجاح");
-
-    // إضافة سؤال للتجربة
-    window.addTestData = async function() {
-      await addDoc(collection(db, "questions"), {
-        text: "ما عاصمة السعودية؟",
-        answer: "الرياض"
+    // حفظ إعدادات وقت المسابقة
+    window.saveSettings = async function () {
+      const start = document.getElementById('startTime').value;
+      const duration = parseInt(document.getElementById('duration').value);
+      if (!start || !duration) {
+        document.getElementById('settingsStatus').textContent = "⚠️ يرجى إدخال الوقت والمدة";
+        return;
+      }
+      await setDoc(doc(db, "settings", "quizTime"), {
+        startTime: start,
+        duration: duration
       });
-      alert("✅ تم إضافة السؤال إلى قاعدة البيانات!");
+      document.getElementById('settingsStatus').textContent = "✅ تم حفظ إعدادات المسابقة";
     }
 
-    // جلب الأسئلة من فايربيز
-    window.getAllQuestions = async function() {
-      const qSnap = await getDocs(collection(db, "questions"));
-      const output = document.getElementById("output");
-      output.textContent = "";
-      qSnap.forEach(doc => {
-        output.textContent += JSON.stringify(doc.data()) + "\n";
+    // إضافة سؤال للسحابة
+    window.addQuestion = async function () {
+      const text = document.getElementById('questionText').value.trim();
+      const ans = document.getElementById('correctAnswer').value.trim();
+      if (!text || !ans) return alert("يرجى إدخال السؤال والإجابة");
+      await addDoc(collection(db, "questions"), { text, answer: ans });
+      document.getElementById('questionsList').textContent = "✅ تم إضافة السؤال أونلاين";
+      document.getElementById('questionText').value = "";
+      document.getElementById('correctAnswer').value = "";
+    }
+
+    // عرض كل الأسئلة المخزنة
+    window.loadQuestions = async function() {
+      const qs = await getDocs(collection(db, "questions"));
+      const out = document.getElementById('output');
+      out.textContent = "";
+      qs.forEach(doc => {
+        out.textContent += "❓ " + doc.data().text + " — ✅ " + doc.data().answer + "\n";
       });
-      alert("📘 تم عرض الأسئلة في الصفحة!");
     }
   </script>
 </body>
