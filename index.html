@@ -1,62 +1,105 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>🏆 نظام المسابقات التعليمية</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: "Cairo", sans-serif;
+      background: #f4f6f5;
+      direction: rtl;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 700px;
+      margin: 60px auto;
+      background: #fff;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      color: #0da175;
+    }
+    input, button {
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      width: 85%;
+      font-size: 1rem;
+    }
+    button {
+      background: #0da175;
+      color: #fff;
+      border: none;
+      transition: 0.3s;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #097e5b;
+    }
+  </style>
 </head>
+
 <body>
-  <!-- شريط المدرسة -->
-  <header class="school-header">
-    <img id="schoolLogo" src="https://cdn-icons-png.flaticon.com/512/2995/2995531.png" alt="شعار المدرسة">
-    <h2 id="schoolName">مدرسة الريادة النموذجية</h2>
-  </header>
-
-  <!-- أيقونة الإدارة -->
-  <div id="adminIcon" class="admin-icon" onclick="toggleAdminPanel()">⚙️</div>
-
-  <!-- لوحة الإدارة -->
-  <div id="adminPanel" class="admin-panel hidden">
-    <div class="admin-header">
-      <h3>لوحة التحكم</h3>
-      <button class="close-btn" onclick="toggleAdminPanel()">✖</button>
-    </div>
-    <div class="admin-tabs">
-      <button class="tab-btn active" onclick="showTab('questions', event)">📝 الأسئلة</button>
-      <button class="tab-btn" onclick="showTab('settings', event)">⚙️ الإعدادات</button>
-      <button class="tab-btn" onclick="showTab('prizes', event)">🎁 الجوائز</button>
-      <button class="tab-btn" onclick="showTab('info', event)">🏫 بيانات المدرسة</button>
-    </div>
-    <div id="tabContent" class="tab-content"></div>
+  <div class="container">
+    <h1>نظام المسابقات التعليمية</h1>
+    <p>هذا اختبار للاتصال بفايربيز (Firebase)</p>
+    <button onclick="addTestData()">إضافة سؤال أونلاين</button>
+    <button onclick="getAllQuestions()">عرض الأسئلة من السحابة</button>
+    <pre id="output"></pre>
   </div>
 
-  <!-- واجهة الطلاب -->
-  <main class="quiz-card">
-    <h1>🏆 نظام المسابقات التعليمية</h1>
+  <!-- 🟢 كود Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-analytics.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      getDocs
+    } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
 
-    <section id="studentForm" class="student-section">
-      <label>اسم الطالب</label>
-      <input type="text" id="studentName" placeholder="اكتب اسمك الكامل">
-      <label>الفصل</label>
-      <input type="text" id="studentClass" placeholder="مثال: 3 / أ">
-      <button onclick="startQuiz()">🚀 ابدأ المسابقة</button>
-    </section>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBWiz4f-aEHwdv34hc81MBtQ3eTzJoeGis",
+      authDomain: "studentquiz-afd8e.firebaseapp.com",
+      projectId: "studentquiz-afd8e",
+      storageBucket: "studentquiz-afd8e.appspot.com",
+      messagingSenderId: "718901037670",
+      appId: "1:718901037670:web:156f5a8428cf06c708bba7",
+      measurementId: "G-GY57GPT97K"
+    };
 
-    <section id="quizArea" class="hidden">
-      <h2>الأسئلة</h2>
-      <div id="questionsContainer"></div>
-      <button onclick="submitAnswers()">📩 إرسال الإجابات</button>
-    </section>
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getFirestore(app);
 
-    <section id="resultArea" class="hidden">
-      <h2>النتيجة</h2>
-      <div id="scoreDisplay" class="score-display"></div>
-      <button onclick="resetQuiz()">🔄 مشاركة جديدة</button>
-    </section>
-  </main>
+    console.log("✅ تم الاتصال بـFirebase بنجاح");
 
-  <div id="toast" class="toast"></div>
-  <script src="script.js"></script>
+    // إضافة سؤال للتجربة
+    window.addTestData = async function() {
+      await addDoc(collection(db, "questions"), {
+        text: "ما عاصمة السعودية؟",
+        answer: "الرياض"
+      });
+      alert("✅ تم إضافة السؤال إلى قاعدة البيانات!");
+    }
+
+    // جلب الأسئلة من فايربيز
+    window.getAllQuestions = async function() {
+      const qSnap = await getDocs(collection(db, "questions"));
+      const output = document.getElementById("output");
+      output.textContent = "";
+      qSnap.forEach(doc => {
+        output.textContent += JSON.stringify(doc.data()) + "\n";
+      });
+      alert("📘 تم عرض الأسئلة في الصفحة!");
+    }
+  </script>
 </body>
 </html>
