@@ -1,97 +1,149 @@
+/* خلفية عامة */
 body {
   font-family: "Cairo", sans-serif;
-  background: #f2f4f3;
+  background: #f4f6f5;
   margin: 0;
   padding: 0;
   direction: rtl;
 }
 
-/* شريط المدرسة */
+/* ترويسة المدرسة */
 .school-header {
   background: #0da175;
-  color: white;
+  color: #fff;
   text-align: center;
-  padding: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
-.school-header img {
-  width: 50px;
-  filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2));
+  padding: 12px 10px;
+  font-weight: bold;
 }
 
 /* بطاقة المسابقة */
 .quiz-card {
-  background: white;
-  max-width: 650px;
-  margin: 50px auto;
-  padding: 35px 25px;
+  background: #fff;
+  max-width: 780px;
+  margin: 40px auto;
+  padding: 30px 25px;
   border-radius: 15px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.12);
   text-align: center;
 }
 
 .quiz-card h1 {
   color: #0da175;
-  margin-bottom: 25px;
+  margin-bottom: 10px;
 }
 
-label {
+.quiz-status {
+  margin: 10px 0 20px;
+  color: #555;
+  font-weight: 600;
+}
+
+/* نموذج الطالب */
+.student-section label {
   display: block;
+  text-align: right;
   margin-top: 10px;
-  font-weight: bold;
+  font-weight: 600;
   color: #333;
 }
 
-input {
-  width: 90%;
+.student-section input {
+  width: 95%;
   padding: 10px;
-  border: 2px solid #ccc;
   border-radius: 8px;
-  font-size: 1rem;
+  border: 1px solid #ccc;
   margin-top: 5px;
+  font-size: 1rem;
 }
 
-button {
-  background: #0da175;
-  color: white;
-  border: none;
-  padding: 12px 25px;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
+/* منطقة الأسئلة */
+#questionsContainer {
+  text-align: right;
   margin-top: 15px;
+}
+
+.question-card {
+  background: #f8faf9;
+  border-radius: 10px;
+  border: 1px solid #e0e2e1;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+
+.question-card p {
+  margin: 0 0 8px;
+}
+
+/* أزرار عامة */
+button {
+  margin-top: 12px;
+  padding: 10px 22px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  background: #0da175;
+  color: #fff;
   transition: 0.2s;
 }
 
 button:hover {
-  background: #0a8c64;
+  background: #0a8a60;
+}
+
+/* العد التنازلي */
+.countdown {
+  font-weight: 700;
+  margin: 8px 0 15px;
+  padding: 8px;
+  border-radius: 8px;
+  background: #e8f7f1;
+  color: #0da175;
 }
 
 /* نتيجة الطالب */
 .score-display {
   font-size: 1.8rem;
-  font-weight: bold;
+  font-weight: 700;
   color: #0da175;
-  margin: 20px 0;
 }
 
-/* أيقونة المشرف */
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background: #333;
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 8px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 9999;
+}
+
+.toast.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* أيقونة الإدارة */
 .admin-icon {
   position: fixed;
   bottom: 20px;
   left: 20px;
   background: #0da175;
-  color: white;
-  padding: 15px;
-  font-size: 1.4rem;
+  color: #fff;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
   z-index: 1000;
 }
 
@@ -100,12 +152,15 @@ button:hover {
   position: fixed;
   bottom: 80px;
   left: 20px;
-  background: white;
-  border-radius: 12px;
-  width: 350px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-  padding: 15px;
+  width: 360px;
+  max-height: 75vh;
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  padding: 12px;
   z-index: 999;
+  display: flex;
+  flex-direction: column;
 }
 
 .admin-panel.hidden {
@@ -116,57 +171,70 @@ button:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 2px solid #eee;
+  border-bottom: 1px solid #eee;
   padding-bottom: 5px;
 }
 
+.close-btn {
+  background: transparent;
+  color: #f44336;
+  font-size: 1.1rem;
+  padding: 0 6px;
+}
+
+/* تبويبات الإدارة */
 .admin-tabs {
-  margin-top: 10px;
+  margin-top: 8px;
   text-align: center;
 }
 
 .tab-btn {
   background: #eee;
+  color: #333;
   border: none;
   border-radius: 8px;
-  margin: 3px;
-  padding: 8px 15px;
+  padding: 6px 10px;
+  margin: 2px;
+  font-size: 0.85rem;
   cursor: pointer;
-  font-weight: bold;
 }
 
 .tab-btn.active {
   background: #0da175;
-  color: white;
-}
-
-.toast {
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  background: #333;
   color: #fff;
-  padding: 15px 25px;
-  border-radius: 8px;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s ease-in-out;
 }
 
-.toast.show {
-  opacity: 1;
-  visibility: visible;
+.tab-content {
+  margin-top: 10px;
+  text-align: right;
+  overflow-y: auto;
+  padding-right: 5px;
 }
 
-/* تجاوب للجوال */
+/* حقول داخل لوحة الإدارة */
+.admin-panel input,
+.admin-panel textarea {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 5px;
+  padding: 7px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 0.9rem;
+}
+
+/* وسائل إخفاء */
+.hidden { display: none; }
+
+/* تجاوب */
 @media (max-width: 600px) {
   .quiz-card {
-    margin: 20px;
-    padding: 20px;
+    margin: 20px 10px;
+    padding: 20px 15px;
   }
   .admin-panel {
-    width: 90%;
-    left: 5%;
-    bottom: 100px;
+    width: 92%;
+    left: 4%;
+    bottom: 90px;
   }
 }
