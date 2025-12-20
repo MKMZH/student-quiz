@@ -4,130 +4,76 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>🏆 نظام المسابقات التعليمية</title>
-  <style>
-    body {
-      font-family:"Cairo",sans-serif;
-      background:#f5f6f8;
-      margin:0;direction:rtl;text-align:center;
-    }
-    .container{
-      background:#fff;
-      max-width:750px;
-      margin:40px auto;
-      padding:25px 20px;
-      border-radius:15px;
-      box-shadow:0 6px 20px rgba(0,0,0,0.1);
-    }
-    h1{color:#0da175;margin-bottom:20px;}
-    section{margin:25px 0;padding:15px;border:1px solid #eee;border-radius:10px;}
-    input,button,textarea{
-      margin:7px 0;padding:10px;width:90%;font-size:1rem;
-      border-radius:8px;border:1px solid #ccc;
-    }
-    button{
-      background:#0da175;color:#fff;border:none;
-      font-weight:bold;cursor:pointer;transition:0.3s;
-    }
-    button:hover{background:#087f59;}
-    .status{font-weight:bold;color:#444;margin-top:10px;}
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <div class="container">
-    <h1>🏆 نظام المسابقات التعليمية</h1>
+  <!-- شريط المدرسة البسيط -->
+  <header class="school-header">
+    <h2 id="schoolName">مدرستي</h2>
+  </header>
 
-    <!-- قسم الإعدادات -->
-    <section id="settings">
-      <h3>⚙️ إعداد المسابقة</h3>
-      <label>تاريخ ووقت بداية المسابقة:</label><br>
-      <input type="datetime-local" id="startTime"><br>
+  <!-- أيقونة الإدارة -->
+  <div id="adminIcon" class="admin-icon" onclick="toggleAdminPanel()">⚙️</div>
 
-      <label>مدة المسابقة (بالدقائق):</label><br>
-      <input type="number" id="duration" value="10"><br>
+  <!-- لوحة الإدارة المنبثقة -->
+  <div id="adminPanel" class="admin-panel hidden">
+    <div class="admin-header">
+      <h3>لوحة التحكم</h3>
+      <button class="close-btn" onclick="toggleAdminPanel()">✖</button>
+    </div>
 
-      <button onclick="saveSettings()">💾 حفظ الإعدادات</button>
-      <div class="status" id="settingsStatus"></div>
-    </section>
+    <div class="admin-tabs">
+      <button class="tab-btn active" onclick="showTab(event,'time')">🕒 الوقت</button>
+      <button class="tab-btn" onclick="showTab(event,'questions')">📝 الأسئلة</button>
+      <button class="tab-btn" onclick="showTab(event,'results')">📊 النتائج</button>
+      <button class="tab-btn" onclick="showTab(event,'archive')">📁 الأرشيف</button>
+    </div>
 
-    <!-- قسم إضافة الأسئلة -->
-    <section id="questions">
-      <h3>📝 إضافة سؤال</h3>
-      <textarea id="questionText" placeholder="اكتب نص السؤال هنا..." rows="3"></textarea><br>
-      <input id="correctAnswer" placeholder="الإجابة الصحيحة"><br>
-      <button onclick="addQuestion()">➕ إضافة السؤال</button>
-      <div id="questionsList" class="status"></div>
-    </section>
-
-    <!-- قسم النتائج -->
-    <section id="results">
-      <h3>📊 النتائج</h3>
-      <button onclick="loadQuestions()">🔄 تحميل الأسئلة من السحابة</button>
-      <pre id="output"></pre>
-    </section>
+    <div id="tabContent" class="tab-content">
+      <!-- سيتم ملؤه من خلال JavaScript -->
+    </div>
   </div>
 
-  <!-- 🔗 كود Firebase -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-    import {
-      getFirestore,
-      collection,
-      addDoc,
-      getDocs,
-      setDoc,
-      doc
-    } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+  <!-- واجهة الطالب -->
+  <main class="quiz-card">
+    <h1>نظام المسابقات التعليمية</h1>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBWiz4f-aEHwdv34hc81MBtQ3eTzJoeGis",
-      authDomain: "studentquiz-afd8e.firebaseapp.com",
-      projectId: "studentquiz-afd8e",
-      storageBucket: "studentquiz-afd8e.appspot.com",
-      messagingSenderId: "718901037670",
-      appId: "1:718901037670:web:156f5a8428cf06c708bba7",
-      measurementId: "G-GY57GPT97K"
-    };
+    <!-- حالة المسابقة -->
+    <div id="quizStatus" class="quiz-status">
+      جاري تحميل إعدادات المسابقة من الخادم...
+    </div>
 
-    const app = initializeApp(firebaseConfig);
-    const db  = getFirestore(app);
-    console.log("✅ متصل بـ Firebase");
+    <!-- نموذج بيانات الطالب -->
+    <section id="studentForm" class="student-section hidden">
+      <label>اسم الطالب</label>
+      <input type="text" id="studentName" placeholder="اكتب اسمك الكامل">
 
-    // حفظ إعدادات وقت المسابقة
-    window.saveSettings = async function () {
-      const start = document.getElementById('startTime').value;
-      const duration = parseInt(document.getElementById('duration').value);
-      if (!start || !duration) {
-        document.getElementById('settingsStatus').textContent = "⚠️ يرجى إدخال الوقت والمدة";
-        return;
-      }
-      await setDoc(doc(db, "settings", "quizTime"), {
-        startTime: start,
-        duration: duration
-      });
-      document.getElementById('settingsStatus').textContent = "✅ تم حفظ إعدادات المسابقة";
-    }
+      <label>الفصل</label>
+      <input type="text" id="studentClass" placeholder="مثال: 3 / أ">
 
-    // إضافة سؤال للسحابة
-    window.addQuestion = async function () {
-      const text = document.getElementById('questionText').value.trim();
-      const ans = document.getElementById('correctAnswer').value.trim();
-      if (!text || !ans) return alert("يرجى إدخال السؤال والإجابة");
-      await addDoc(collection(db, "questions"), { text, answer: ans });
-      document.getElementById('questionsList').textContent = "✅ تم إضافة السؤال أونلاين";
-      document.getElementById('questionText').value = "";
-      document.getElementById('correctAnswer').value = "";
-    }
+      <button onclick="enterQuiz()">دخول المسابقة 🚀</button>
+    </section>
 
-    // عرض كل الأسئلة المخزنة
-    window.loadQuestions = async function() {
-      const qs = await getDocs(collection(db, "questions"));
-      const out = document.getElementById('output');
-      out.textContent = "";
-      qs.forEach(doc => {
-        out.textContent += "❓ " + doc.data().text + " — ✅ " + doc.data().answer + "\n";
-      });
-    }
-  </script>
+    <!-- منطقة الأسئلة -->
+    <section id="quizArea" class="hidden">
+      <div id="countdown" class="countdown"></div>
+      <div id="questionsContainer"></div>
+      <button onclick="submitAnswers()">📩 إرسال الإجابات</button>
+    </section>
+
+    <!-- نتيجة الطالب -->
+    <section id="resultArea" class="hidden">
+      <h2>نتيجتك</h2>
+      <div id="scoreDisplay" class="score-display"></div>
+      <p id="resultNote"></p>
+    </section>
+  </main>
+
+  <!-- مكوّن إشعار بسيط -->
+  <div id="toast" class="toast"></div>
+
+  <!-- سكربت التطبيق (سنضعه بملف منفصل) -->
+  <script type="module" src="app.js"></script>
 </body>
 </html>
