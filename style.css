@@ -1,4 +1,6 @@
-/* خلفية عامة */
+/* =========================
+   الأساسيات العامة
+   ========================= */
 body {
   font-family: "Cairo", sans-serif;
   background: #f4f6f5;
@@ -7,7 +9,7 @@ body {
   direction: rtl;
 }
 
-/* ترويسة المدرسة */
+/* شريط المدرسة */
 .school-header {
   background: #0da175;
   color: #fff;
@@ -16,7 +18,9 @@ body {
   font-weight: bold;
 }
 
-/* بطاقة المسابقة */
+/* =========================
+   بطاقة رئيسية (طالب / شاشة البداية)
+   ========================= */
 .quiz-card {
   background: #fff;
   max-width: 780px;
@@ -36,6 +40,12 @@ body {
   margin: 10px 0 20px;
   color: #555;
   font-weight: 600;
+}
+
+/* شاشة البداية */
+#roleScreen p {
+  margin-bottom: 15px;
+  color: #555;
 }
 
 /* نموذج الطالب */
@@ -109,7 +119,14 @@ button:hover {
   color: #0da175;
 }
 
-/* Toast */
+/* إخفاء/إظهار عام */
+.hidden {
+  display: none;
+}
+
+/* =========================
+   Toast
+   ========================= */
 .toast {
   position: fixed;
   bottom: 25px;
@@ -121,7 +138,7 @@ button:hover {
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease;
-  z-index: 9999;
+  z-index: 3000;
 }
 
 .toast.show {
@@ -129,60 +146,51 @@ button:hover {
   visibility: visible;
 }
 
-/* أيقونة الإدارة */
-.admin-icon {
+/* =========================
+   لوحة المشرف
+   ========================= */
+
+/* غلاف لوحة المشرف (للسماح بزر الرجوع) */
+.admin-wrapper {
+  max-width: 900px;
+  margin: 30px auto;
+  position: relative;
+  padding: 10px;
+}
+
+/* زر الرجوع من لوحة المشرف */
+.admin-back {
   position: fixed;
-  bottom: 20px;
+  top: 70px;
   left: 20px;
   background: #0da175;
   color: #fff;
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 5px 12px;
+  border-radius: 8px;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-  z-index: 1000;
+  z-index: 1001;
+  font-size: 0.9rem;
 }
 
-/* لوحة الإدارة */
+/* صندوق لوحة المشرف */
 .admin-panel {
-  position: fixed;
-  bottom: 80px;
-  left: 20px;
-  width: 360px;
-  max-height: 75vh;
   background: #fff;
   border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
   padding: 12px;
-  z-index: 999;
-  display: flex;
-  flex-direction: column;
-}
-
-.admin-panel.hidden {
-  display: none;
+  max-height: 80vh;
+  overflow: hidden;
 }
 
 .admin-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   border-bottom: 1px solid #eee;
   padding-bottom: 5px;
 }
 
-.close-btn {
-  background: transparent;
-  color: #f44336;
-  font-size: 1.1rem;
-  padding: 0 6px;
-}
-
-/* تبويبات الإدارة */
+/* تبويبات المشرف */
 .admin-tabs {
   margin-top: 8px;
   text-align: center;
@@ -204,14 +212,15 @@ button:hover {
   color: #fff;
 }
 
+/* محتوى التبويب */
 .tab-content {
   margin-top: 10px;
   text-align: right;
   overflow-y: auto;
+  max-height: 60vh;
   padding-right: 5px;
 }
 
-/* حقول داخل لوحة الإدارة */
 .admin-panel input,
 .admin-panel textarea {
   width: 100%;
@@ -223,18 +232,57 @@ button:hover {
   font-size: 0.9rem;
 }
 
-/* وسائل إخفاء */
-.hidden { display: none; }
+/* =========================
+   نافذة تسجيل دخول المشرف
+   ========================= */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
 
-/* تجاوب */
+.login-box {
+  background: #fff;
+  padding: 20px 20px 15px;
+  border-radius: 12px;
+  text-align: center;
+  width: 280px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+}
+
+.login-box input {
+  width: 90%;
+  margin-bottom: 10px;
+}
+
+.error-text {
+  color: #f44336;
+  font-size: 0.9rem;
+}
+
+.link-btn {
+  background: transparent;
+  color: #0da175;
+  text-decoration: underline;
+  margin-top: 5px;
+}
+
+/* =========================
+   تجاوب مع الشاشات الصغيرة
+   ========================= */
 @media (max-width: 600px) {
   .quiz-card {
     margin: 20px 10px;
     padding: 20px 15px;
   }
+  .admin-wrapper {
+    margin: 20px 5px;
+  }
   .admin-panel {
-    width: 92%;
-    left: 4%;
-    bottom: 90px;
+    max-height: 82vh;
   }
 }
