@@ -8,43 +8,27 @@
 </head>
 
 <body>
-  <!-- شريط المدرسة البسيط -->
+  <!-- شريط المدرسة -->
   <header class="school-header">
     <h2 id="schoolName">مدرستي</h2>
   </header>
 
-  <!-- أيقونة الإدارة -->
-  <div id="adminIcon" class="admin-icon" onclick="toggleAdminPanel()">⚙️</div>
+  <!-- شاشة اختيار الدور -->
+  <main class="quiz-card" id="roleScreen">
+    <h1>نظام المسابقات التعليمية</h1>
+    <p>اختر وضع الدخول:</p>
+    <button onclick="enterStudentMode()">👨‍🎓 دخول الطالب</button>
+    <button onclick="showAdminLogin()">⚙️ دخول المشرف</button>
+  </main>
 
-  <!-- لوحة الإدارة المنبثقة -->
-  <div id="adminPanel" class="admin-panel hidden">
-    <div class="admin-header">
-      <h3>لوحة التحكم</h3>
-      <button class="close-btn" onclick="toggleAdminPanel()">✖</button>
-    </div>
-
-    <div class="admin-tabs">
-      <button class="tab-btn active" onclick="showTab(event,'time')">🕒 الوقت</button>
-      <button class="tab-btn" onclick="showTab(event,'questions')">📝 الأسئلة</button>
-      <button class="tab-btn" onclick="showTab(event,'results')">📊 النتائج</button>
-      <button class="tab-btn" onclick="showTab(event,'archive')">📁 الأرشيف</button>
-    </div>
-
-    <div id="tabContent" class="tab-content">
-      <!-- سيتم ملؤه من خلال JavaScript -->
-    </div>
-  </div>
-
-  <!-- واجهة الطالب -->
-  <main class="quiz-card">
+  <!-- شاشة الطالب الكاملة -->
+  <main class="quiz-card hidden" id="studentScreen">
     <h1>نظام المسابقات التعليمية</h1>
 
-    <!-- حالة المسابقة -->
     <div id="quizStatus" class="quiz-status">
       جاري تحميل إعدادات المسابقة من الخادم...
     </div>
 
-    <!-- نموذج بيانات الطالب -->
     <section id="studentForm" class="student-section hidden">
       <label>اسم الطالب</label>
       <input type="text" id="studentName" placeholder="اكتب اسمك الكامل">
@@ -55,14 +39,12 @@
       <button onclick="enterQuiz()">دخول المسابقة 🚀</button>
     </section>
 
-    <!-- منطقة الأسئلة -->
     <section id="quizArea" class="hidden">
       <div id="countdown" class="countdown"></div>
       <div id="questionsContainer"></div>
       <button onclick="submitAnswers()">📩 إرسال الإجابات</button>
     </section>
 
-    <!-- نتيجة الطالب -->
     <section id="resultArea" class="hidden">
       <h2>نتيجتك</h2>
       <div id="scoreDisplay" class="score-display"></div>
@@ -70,10 +52,42 @@
     </section>
   </main>
 
-  <!-- مكوّن إشعار بسيط -->
+  <!-- لوحة المشرف (بعد إدخال كلمة المرور) -->
+  <div id="adminScreen" class="admin-wrapper hidden">
+    <!-- أيقونة لإغلاق اللوحة والرجوع للشاشة الرئيسية -->
+    <div class="admin-back" onclick="backToRoleScreen()">↩ الرجوع</div>
+
+    <div id="adminPanel" class="admin-panel">
+      <div class="admin-header">
+        <h3>لوحة التحكم</h3>
+      </div>
+
+      <div class="admin-tabs">
+        <button class="tab-btn active" onclick="showTab(event,'time')">🕒 الوقت</button>
+        <button class="tab-btn" onclick="showTab(event,'questions')">📝 الأسئلة</button>
+        <button class="tab-btn" onclick="showTab(event,'results')">📊 النتائج</button>
+        <button class="tab-btn" onclick="showTab(event,'archive')">📁 الأرشيف</button>
+      </div>
+
+      <div id="tabContent" class="tab-content"></div>
+    </div>
+  </div>
+
+  <!-- نافذة كلمة سر المشرف -->
+  <div id="adminLoginOverlay" class="overlay hidden">
+    <div class="login-box">
+      <h3>دخول المشرف</h3>
+      <input type="password" id="adminPasswordInput" placeholder="أدخل كلمة المرور">
+      <button onclick="checkAdminPassword()">دخول</button>
+      <p id="adminLoginError" class="error-text hidden">كلمة المرور غير صحيحة</p>
+      <button class="link-btn" onclick="hideAdminLogin()">إلغاء</button>
+    </div>
+  </div>
+
+  <!-- Toast -->
   <div id="toast" class="toast"></div>
 
-  <!-- سكربت التطبيق (سنضعه بملف منفصل) -->
+  <!-- سكربت التطبيق -->
   <script type="module" src="app.js"></script>
 </body>
 </html>
